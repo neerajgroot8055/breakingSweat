@@ -7,6 +7,7 @@ import com.breakingSweat.userservice.dto.UserResponse;
 import com.breakingSweat.userservice.models.User;
 import lombok.AllArgsConstructor;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,8 +36,31 @@ public class userService {
         userResponse.setFirstName(savedUser.getFirstName());
         userResponse.setLastName(savedUser.getLastName());
         userResponse.setPassword(savedUser.getPassword());
+        userResponse.setCreatedAt(savedUser.getCreatedAt());
+        userResponse.setUpdatedAT(savedUser.getUpdatedAT());
+
 
         return userResponse ;
+
+    }
+
+    public @Nullable UserResponse getUserProfile(String userId) {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        User savedUser = repository.save(user) ;
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setPassword(user.getPassword());
+        userResponse.setCreatedAt(user.getCreatedAt());
+        userResponse.setUpdatedAT(user.getUpdatedAT());
+
+        return userResponse ;
+
+
 
     }
 }
