@@ -7,6 +7,8 @@ import com.example.activityservice.model.activity;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +16,10 @@ import org.springframework.stereotype.Service;
 public class activityService {
     private final ActivityRepository activityRepository ;
     private final UserValidationService userValidationService ;
+    private final KafkaTemplate<String, activity> kafkaTemplate ;
+
+    @Value("${kafka.topic.name}")
+    private String topicName;
 
 
     public activityResponse trackActivity(activityRequest request) {
@@ -32,6 +38,12 @@ public class activityService {
                 .build() ;
 
         activity savedActivity = activityRepository.save(activity) ;
+        try{
+            kafkaTemplate.send(topicName,savedActivity.getUserId(),savedActivity);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return mapToResponse(savedActivity) ;
     }
 
