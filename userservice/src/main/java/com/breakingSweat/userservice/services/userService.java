@@ -63,4 +63,8 @@ public class userService {
 
 
     }
+
+    public @Nullable Boolean existByUserId(String userId) {
+        return repository.existsById(userId);
+    }
 }
