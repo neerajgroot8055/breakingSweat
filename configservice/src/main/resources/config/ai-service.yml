@@ -1,0 +1,30 @@
+spring:
+  application:
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: activity-processor-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.fitness.aiservice.model.activity
+        spring.json.trusted.packages: "*"
+
+gemini:
+  api:
+    url: ${GEMINI_URL}
+    key : ${GEMINI_KEY}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 8083
+
+kafka:
+  topic:
+    name: activity-events

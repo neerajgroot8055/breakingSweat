@@ -1,25 +1,6 @@
 spring:
   application:
-    name: userservice
+    name: user-service
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/breaking
-    username: postgres
-    password: admin@123
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-
-
-server :
-  port : 8081
+  config:
+    import: optional:configserver:http://localhost:8888
