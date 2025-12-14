@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: user-service
 
   datasource:
     url: jdbc:postgresql://localhost:5432/breaking
@@ -14,10 +16,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-
 
 server :
   port : 8081
