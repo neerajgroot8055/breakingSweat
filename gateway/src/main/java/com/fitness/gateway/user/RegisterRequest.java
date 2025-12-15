@@ -1,4 +1,4 @@
-package com.breakingSweat.userservice.dto;
+package com.fitness.gateway.user;
 
 
 import jakarta.validation.constraints.Email;
@@ -11,10 +11,11 @@ public class RegisterRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid format")
     private String email ;
-    private String keyCloakId ;
 
     @NotBlank(message = "Pass required ")
     @Size(min = 6 , message = "Atleast 6 chars required")
+
+    private String keyCloakId ;
     private String password ;
     private String firstname ;
     private String lastname ;
