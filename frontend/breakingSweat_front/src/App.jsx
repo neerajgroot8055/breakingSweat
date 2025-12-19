@@ -1,34 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import { Box, Button } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
+import { AuthContext } from 'react-oauth2-code-pkce'
+import { useDispatch } from 'react-redux';
+import { BrowserRouter as Router ,Route , Navigate,Routes,useLocation } from 'react-router'
+import { setCredentials } from './store/authSlice';
+import ActivityDetail from './components/ActivityDetail';
+import ActivityList from './components/ActivityList';
+import ActivityForm from './components/ActivityForm';
+
+const ActivitiesPage = () => {
+  return (
+    <Box sx={{ p: 2, border: '1px dashed grey' }}>
+      <ActivityForm onActivityAdded = { () => window.location.reload()}/>
+      <ActivityList />
+    </Box>
+  );
+}
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  const {token , tokenData,logIn ,logOut,isAuthenticated} = useContext(AuthContext) ;
+
+  const dispatch = useDispatch();
+  const [authReady ,setAuthReady] = useState(false);
+
+  useEffect(()=>{
+    if(token){
+      dispatch(setCredentials({token,user : tokenData}));
+      setAuthReady(true) ;
+      
+      
+    }
+  },[token,tokenData,dispatch]);
   return (
-    <>
+   <Router>
+   {!token ? (
+   <Button variant="contained" onClick={()=> {logIn()}}>
+  Login
+</Button>
+    ) : (
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+         <Box component="section" sx={{ p: 2, border: '1px dashed grey' }}>
+          <Button variant="contained" onClick={logOut} >
+            LOGOUT  
+          </Button>
+          <Routes>
+            <Route path="/activities" element={<ActivitiesPage />}/>
+            <Route path="/activities/:id" element={<ActivityDetail />}/>
+            <Route path="/" element={token ? <Navigate to="/activities" replace/> :
+                                  <div>Welcome! Please login</div>}/>
+          </Routes>
+        </Box>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    )}
+   </Router>
+   
+   
   )
 }
 
